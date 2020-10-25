@@ -16,7 +16,7 @@ namespace BookInfoApp.Core.Entities.AreaBook
             BookPublishers = new List<BookPublisher>();
             InputWorks = new List<InputWork>();
             BookForConnectInputWorks = new List<InputWork>();
-    }
+        }
 
         public Guid Id { get; set; }
         public string Name { get; set; }
