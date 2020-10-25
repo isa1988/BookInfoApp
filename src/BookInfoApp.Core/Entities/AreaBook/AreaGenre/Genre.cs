@@ -7,11 +7,11 @@ namespace BookInfoApp.Core.Entities.AreaBook.AreaGenre
     {
         public Genre()
         {
-            BookGenras = new List<BookGenra>();
+            BookGenras = new List<BookGenre>();
         }
         public Guid Id { get; set; }
         public string Name { get; set; }
 
-        public List<BookGenra> BookGenras { get; set; }
+        public List<BookGenre> BookGenras { get; set; }
     }
 }

@@ -308,3 +308,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# appSettings files
+appsettings.Development.json

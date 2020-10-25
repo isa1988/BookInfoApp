@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BookInfoApp.Core.Entities.AreaBook.AreaGenre
 {
-    public class BookGenra : IEntity
+    public class BookGenre : IEntity
     {
         public Genre Genre { get; set; }
         public Guid GuidId { get; set; }

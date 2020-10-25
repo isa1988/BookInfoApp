@@ -12,7 +12,7 @@ namespace BookInfoApp.Core.Entities.AreaBook
         public Book()
         {
             BookAuthors = new List<BookAuthor>();
-            BookGenras = new List<BookGenra>();
+            BookGenres = new List<BookGenre>();
             BookPublishers = new List<BookPublisher>();
             InputWorks = new List<InputWork>();
             BookForConnectInputWorks = new List<InputWork>();
@@ -29,7 +29,7 @@ namespace BookInfoApp.Core.Entities.AreaBook
         public Guid AgeCategoryId { get; set; }
 
         public List<BookAuthor> BookAuthors { get; set; }
-        public List<BookGenra> BookGenras { get; set; }
+        public List<BookGenre> BookGenres { get; set; }
         public List<BookPublisher> BookPublishers { get; set; }
 
         public List<InputWork> InputWorks { get; set; }

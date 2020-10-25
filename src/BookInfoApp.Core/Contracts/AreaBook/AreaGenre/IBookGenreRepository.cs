@@ -2,7 +2,7 @@
 
 namespace BookInfoApp.Core.Contracts.AreaBook.AreaGenre
 {
-    public interface IBookGenreRepository : IRepository<BookGenra>
+    public interface IBookGenreRepository : IRepository<BookGenre>
     {
     }
 }
