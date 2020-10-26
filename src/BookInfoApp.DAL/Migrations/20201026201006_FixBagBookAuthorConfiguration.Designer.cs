@@ -3,15 +3,17 @@ using System;
 using BookInfoApp.DAL.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BookInfoApp.DAL.Migrations
 {
     [DbContext(typeof(DbContextBookInfoApp))]
-    partial class DbContextBookInfoAppModelSnapshot : ModelSnapshot
+    [Migration("20201026201006_FixBagBookAuthorConfiguration")]
+    partial class FixBagBookAuthorConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

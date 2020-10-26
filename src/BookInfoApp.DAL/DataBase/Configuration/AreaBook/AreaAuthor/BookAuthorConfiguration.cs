@@ -8,13 +8,13 @@ namespace BookInfoApp.DAL.DataBase.Configuration.AreaBook.AreaAuthor
     {
         public void Configure(EntityTypeBuilder<BookAuthor> builder)
         {
-            builder.HasKey(p => new {p.BookId, p.AuthorId});
+            builder.HasKey(p => new { IdAuthor = p.AuthorId, IdBook = p.BookId});
             builder.HasOne(p => p.Author)
                 .WithMany(t => t.BookAuthors)
                 .HasForeignKey(p => p.AuthorId);
             builder.HasOne(p => p.Book)
                 .WithMany(t => t.BookAuthors)
-                .HasForeignKey(p => p.AuthorId);
+                .HasForeignKey(p => p.BookId);
         }
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace BookInfoApp.DAL.Repositories
 {
 
-    public class Repository<T> : IRepository<T> where T : class, IEntity
+    public abstract class Repository<T> : IRepository<T> where T : class, IEntity
     {
         public Repository(DbContextBookInfoApp context)
         {
@@ -24,6 +24,13 @@ namespace BookInfoApp.DAL.Repositories
         public virtual async Task<T> CreateAsync(T entity)
         {
             var entry = await dbSet.AddAsync(entity);
+
+            return entry.Entity;
+        }
+
+        public virtual T Create(T entity)
+        {
+            var entry = dbSet.Add(entity);
 
             return entry.Entity;
         }
@@ -59,15 +66,22 @@ namespace BookInfoApp.DAL.Repositories
         {
             await context.SaveChangesAsync();
         }
+
+        public virtual void Save()
+        {
+            context.SaveChanges();
+        }
     }
 
-    public class Repository<T, TId> : Repository<T>, IRepository<T, TId>
+    public abstract class Repository<T, TId> : Repository<T>, IRepository<T, TId>
         where T : class, IEntity<TId>
         where TId : IEquatable<TId>
     {
-        public Repository(DbContextBookInfoApp context)
+        private readonly bool isIdAutoIncrement;
+        public Repository(DbContextBookInfoApp context, bool isIdAutoIncrement = false)
             : base(context)
         {
+            this.isIdAutoIncrement = isIdAutoIncrement;
         }
 
         public virtual async Task<T> GetByIdAsync(TId id)
@@ -75,5 +89,30 @@ namespace BookInfoApp.DAL.Repositories
             var entry = await dbSet.FirstOrDefaultAsync(x => x.Id.Equals(id));
             return entry;
         }
+
+        protected abstract TId GetNewId();
+
+        public override async Task<T> CreateAsync(T entity)
+        {
+            if (!isIdAutoIncrement)
+            {
+                entity.Id = GetId(GetNewId());
+            }
+
+            return await base.CreateAsync(entity);
+        }
+
+        private TId GetId(TId value)
+        {
+            if (dbSet.Any(p => p.Id.Equals(value)))
+            {
+
+                value = GetNewId();
+                return GetId(value);
+            }
+
+            return value;
+        }
     }
 }
+

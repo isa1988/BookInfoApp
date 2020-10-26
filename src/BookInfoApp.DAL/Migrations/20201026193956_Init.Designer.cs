@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookInfoApp.DAL.Migrations
 {
     [DbContext(typeof(DbContextBookInfoApp))]
-    [Migration("20201025191440_Init")]
+    [Migration("20201026193956_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,33 +64,31 @@ namespace BookInfoApp.DAL.Migrations
 
             modelBuilder.Entity("BookInfoApp.Core.Entities.AreaBook.AreaAuthor.BookAuthor", b =>
                 {
-                    b.Property<Guid>("BookId")
+                    b.Property<Guid>("AuthorId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid>("BookId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsMain")
                         .HasColumnType("boolean");
 
-                    b.HasKey("BookId", "AuthorId");
-
-                    b.HasIndex("AuthorId");
+                    b.HasKey("AuthorId", "BookId");
 
                     b.ToTable("BookAuthors");
                 });
 
             modelBuilder.Entity("BookInfoApp.Core.Entities.AreaBook.AreaGenre.BookGenre", b =>
                 {
+                    b.Property<Guid>("GenreId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("BookId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("GuidId")
-                        .HasColumnType("uuid");
+                    b.HasKey("GenreId", "BookId");
 
-                    b.HasKey("BookId", "GuidId");
-
-                    b.HasIndex("GuidId");
+                    b.HasIndex("BookId");
 
                     b.ToTable("BookGenres");
                 });
@@ -141,38 +139,41 @@ namespace BookInfoApp.DAL.Migrations
 
             modelBuilder.Entity("BookInfoApp.Core.Entities.AreaBook.InputWork", b =>
                 {
-                    b.Property<Guid>("BookId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("WorkId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("BookId", "WorkId");
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uuid");
 
-                    b.HasIndex("WorkId");
+                    b.HasKey("WorkId", "BookId");
+
+                    b.HasIndex("BookId");
 
                     b.ToTable("InputWorks");
                 });
 
             modelBuilder.Entity("BookInfoApp.Core.Entities.AreaPublisher.BookPublisher", b =>
                 {
-                    b.Property<Guid>("BookId")
+                    b.Property<Guid>("PublisherId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("PublisherId")
+                    b.Property<Guid>("BookId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CoverTypeId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("TotalPage")
+                        .HasColumnType("integer");
+
                     b.Property<int>("YearOfPublishing")
                         .HasColumnType("integer");
 
-                    b.HasKey("BookId", "PublisherId");
+                    b.HasKey("PublisherId", "BookId");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("CoverTypeId");
-
-                    b.HasIndex("PublisherId");
 
                     b.ToTable("BookPublishers");
                 });
@@ -234,7 +235,7 @@ namespace BookInfoApp.DAL.Migrations
 
                     b.HasOne("BookInfoApp.Core.Entities.AreaBook.AreaGenre.Genre", "Genre")
                         .WithMany("BookGenras")
-                        .HasForeignKey("GuidId")
+                        .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

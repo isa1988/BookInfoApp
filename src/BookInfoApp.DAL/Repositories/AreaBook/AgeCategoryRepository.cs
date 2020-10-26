@@ -10,5 +10,10 @@ namespace BookInfoApp.DAL.Repositories.AreaBook
         public AgeCategoryRepository(DbContextBookInfoApp context) : base(context)
         {
         }
+        protected override Guid GetNewId()
+        {
+            var retVal = Guid.NewGuid();
+            return retVal;
+        }
     }
 }

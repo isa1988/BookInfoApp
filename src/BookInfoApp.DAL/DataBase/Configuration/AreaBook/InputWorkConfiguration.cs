@@ -8,7 +8,7 @@ namespace BookInfoApp.DAL.DataBase.Configuration.AreaBook
     {
         public void Configure(EntityTypeBuilder<InputWork> builder)
         {
-            builder.HasKey(p => new { p.BookId, p.WorkId });
+            builder.HasKey(p => new { IdWork = p.WorkId, IdBook = p.BookId });
             builder.HasOne(p => p.Book)
                 .WithMany(t => t.BookForConnectInputWorks)
                 .HasForeignKey(p => p.BookId);

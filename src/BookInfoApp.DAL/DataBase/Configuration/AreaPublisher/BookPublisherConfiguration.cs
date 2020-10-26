@@ -8,7 +8,7 @@ namespace BookInfoApp.DAL.DataBase.Configuration.AreaPublisher
     {
         public void Configure(EntityTypeBuilder<BookPublisher> builder)
         {
-            builder.HasKey(p => new { p.BookId, p.PublisherId});
+            builder.HasKey(p => new { IdPublisher = p.PublisherId, IdBook = p.BookId });
             builder.HasOne(p => p.Book)
                 .WithMany(t => t.BookPublishers)
                 .HasForeignKey(p => p.BookId);

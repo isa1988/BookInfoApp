@@ -101,7 +101,7 @@ namespace BookInfoApp.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookAuthors", x => new { x.BookId, x.AuthorId });
+                    table.PrimaryKey("PK_BookAuthors", x => new { x.AuthorId, x.BookId });
                     table.ForeignKey(
                         name: "FK_BookAuthors_Authors_AuthorId",
                         column: x => x.AuthorId,
@@ -120,12 +120,12 @@ namespace BookInfoApp.DAL.Migrations
                 name: "BookGenres",
                 columns: table => new
                 {
-                    GuidId = table.Column<Guid>(nullable: false),
+                    GenreId = table.Column<Guid>(nullable: false),
                     BookId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookGenres", x => new { x.BookId, x.GuidId });
+                    table.PrimaryKey("PK_BookGenres", x => new { x.GenreId, x.BookId });
                     table.ForeignKey(
                         name: "FK_BookGenres_Books_BookId",
                         column: x => x.BookId,
@@ -133,8 +133,8 @@ namespace BookInfoApp.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookGenres_Genres_GuidId",
-                        column: x => x.GuidId,
+                        name: "FK_BookGenres_Genres_GenreId",
+                        column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -147,11 +147,12 @@ namespace BookInfoApp.DAL.Migrations
                     PublisherId = table.Column<Guid>(nullable: false),
                     BookId = table.Column<Guid>(nullable: false),
                     CoverTypeId = table.Column<Guid>(nullable: false),
-                    YearOfPublishing = table.Column<int>(nullable: false)
+                    YearOfPublishing = table.Column<int>(nullable: false),
+                    TotalPage = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookPublishers", x => new { x.BookId, x.PublisherId });
+                    table.PrimaryKey("PK_BookPublishers", x => new { x.PublisherId, x.BookId });
                     table.ForeignKey(
                         name: "FK_BookPublishers_Books_BookId",
                         column: x => x.BookId,
@@ -181,7 +182,7 @@ namespace BookInfoApp.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InputWorks", x => new { x.BookId, x.WorkId });
+                    table.PrimaryKey("PK_InputWorks", x => new { x.WorkId, x.BookId });
                     table.ForeignKey(
                         name: "FK_InputWorks_Books_BookId",
                         column: x => x.BookId,
@@ -197,14 +198,14 @@ namespace BookInfoApp.DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookAuthors_AuthorId",
-                table: "BookAuthors",
-                column: "AuthorId");
+                name: "IX_BookGenres_BookId",
+                table: "BookGenres",
+                column: "BookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookGenres_GuidId",
-                table: "BookGenres",
-                column: "GuidId");
+                name: "IX_BookPublishers_BookId",
+                table: "BookPublishers",
+                column: "BookId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookPublishers_CoverTypeId",
@@ -212,19 +213,14 @@ namespace BookInfoApp.DAL.Migrations
                 column: "CoverTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookPublishers_PublisherId",
-                table: "BookPublishers",
-                column: "PublisherId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Books_AgeCategoryId",
                 table: "Books",
                 column: "AgeCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InputWorks_WorkId",
+                name: "IX_InputWorks_BookId",
                 table: "InputWorks",
-                column: "WorkId");
+                column: "BookId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

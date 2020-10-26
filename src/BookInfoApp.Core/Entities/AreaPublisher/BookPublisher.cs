@@ -17,5 +17,6 @@ namespace BookInfoApp.Core.Entities.AreaPublisher
         public Guid CoverTypeId { get; set; }
         
         public int YearOfPublishing { get; set; }
+        public int TotalPage { get; set; }
     }
 }

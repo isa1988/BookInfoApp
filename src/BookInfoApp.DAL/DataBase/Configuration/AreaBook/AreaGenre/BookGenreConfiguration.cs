@@ -11,10 +11,10 @@ namespace BookInfoApp.DAL.DataBase.Configuration.AreaBook.AreaGenre
     {
         public void Configure(EntityTypeBuilder<BookGenre> builder)
         {
-            builder.HasKey(p => new { p.BookId, p.GuidId });
+            builder.HasKey(p => new { IdGenre = p.GenreId, IdBook = p.BookId });
             builder.HasOne(p => p.Genre)
                 .WithMany(t => t.BookGenras)
-                .HasForeignKey(p => p.GuidId);
+                .HasForeignKey(p => p.GenreId);
             builder.HasOne(p => p.Book)
                 .WithMany(t => t.BookGenres)
                 .HasForeignKey(p => p.BookId);

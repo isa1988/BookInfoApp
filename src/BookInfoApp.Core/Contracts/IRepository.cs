@@ -9,9 +9,11 @@ namespace BookInfoApp.Core.Contracts
     public interface IRepository<T> where T : class, IEntity
     {
         Task<T> CreateAsync(T entity);
+        T Create(T entity);
         EntityEntry<T> Update(T entity);
         EntityEntry<T> Delete(T entity);
         Task SaveAsync();
+        void Save();
 
         Task<List<T>> GetAllAsync();
 

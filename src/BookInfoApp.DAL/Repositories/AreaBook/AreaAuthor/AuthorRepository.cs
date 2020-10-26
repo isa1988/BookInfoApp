@@ -10,5 +10,11 @@ namespace BookInfoApp.DAL.Repositories.AreaBook.AreaAuthor
         public AuthorRepository(DbContextBookInfoApp context) : base(context)
         {
         }
+
+        protected override Guid GetNewId()
+        {
+            var retVal = Guid.NewGuid();
+            return retVal;
+        }
     }
 }
