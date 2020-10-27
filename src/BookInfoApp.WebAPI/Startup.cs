@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace BookInfoApp.WebAPI
 {
@@ -28,10 +29,19 @@ namespace BookInfoApp.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers()
+                .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
             services.AddDatabaseContext(Configuration);
             services.AddAutoMapperCustom();
-            services.AddControllers();
             services.AddScoped<IDbInitializer, DbInitializer>();
+
+            services.AddOpenApiDocument(options =>
+            {
+                options.Title = "PromoCode Factory API Doc";
+                options.Version = "1.0";
+            });
+
 
             return new AutofacServiceProvider(services.ConfigureAutofac());
         }
@@ -43,6 +53,12 @@ namespace BookInfoApp.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3(x =>
+            {
+                x.DocExpansion = "list";
+            });
 
             app.UseHttpsRedirection();
 

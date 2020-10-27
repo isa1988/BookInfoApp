@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using AutoMapper;
-using BookInfoApp.Core.Contracts;
+using BookInfoApp.Core.Contracts.AreaBook;
 using BookInfoApp.Core.Entities.AreaBook;
 using BookInfoApp.Core.Helper;
 using BookInfoApp.Services.Contracts.AreaBook;
@@ -12,7 +10,7 @@ namespace BookInfoApp.Services.Services.AreaBook
 {
     public class BookService : GeneralService<Book, BookDto, Guid>, IBookService
     {
-        public BookService(IMapper mapper, IRepository<Book, Guid> repository) : base(mapper, repository)
+        public BookService(IMapper mapper, IBookRepository repository) : base(mapper, repository)
         {
         }
 

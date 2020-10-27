@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using BookInfoApp.Core.Contracts.AreaPublisher;
 using BookInfoApp.Core.Entities.AreaPublisher;
 using BookInfoApp.Core.Helper;
@@ -30,16 +31,24 @@ namespace BookInfoApp.DAL.Repositories.AreaPublisher
 
             if (resolveOptions.IsBookPublisher)
             {
-                query = query.Include(x => x.BookPublishers);
-                if (resolveOptions.IsPublisher)
+                if (resolveOptions.IsPublisher && resolveOptions.IsBook)
                 {
-                    var includable = (IIncludableQueryable<CoverType, BookPublisher>)query;
-                    query = includable.ThenInclude(x => x.Publisher);
+                    //query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Publisher);
+                    //query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Book);
+                    query = query.Include(x => x.BookPublishers);
                 }
-                if (resolveOptions.IsBook)
+                else if (resolveOptions.IsPublisher && !resolveOptions.IsBook)
                 {
-                    var includable = (IIncludableQueryable<CoverType, BookPublisher>)query;
-                    query = includable.ThenInclude(x => x.Book);
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Publisher);
+                }
+
+                else if (!resolveOptions.IsPublisher && resolveOptions.IsBook)
+                {
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Book);
+                }
+                else
+                {
+                    query = query.Include(x => x.BookPublishers);
                 }
             }
 

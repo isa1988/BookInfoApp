@@ -30,16 +30,22 @@ namespace BookInfoApp.DAL.Repositories.AreaPublisher
 
             if (resolveOptions.IsBookPublisher)
             {
-                query = query.Include(x => x.BookPublishers);
-                if (resolveOptions.IsCoverType)
+                if (resolveOptions.IsCoverType && resolveOptions.IsBook)
                 {
-                    var includable = (IIncludableQueryable<Publisher, BookPublisher>)query;
-                    query = includable.ThenInclude(x => x.CoverType);
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.CoverType);
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Book);
                 }
-                if (resolveOptions.IsBook)
+                else if (resolveOptions.IsCoverType && !resolveOptions.IsBook)
                 {
-                    var includable = (IIncludableQueryable<Publisher, BookPublisher>)query;
-                    query = includable.ThenInclude(x => x.Book);
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.CoverType);
+                }
+                else if (!resolveOptions.IsCoverType && resolveOptions.IsBook)
+                {
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Book);
+                }
+                else
+                {
+                    query = query.Include(x => x.BookPublishers);
                 }
             }
 

@@ -38,46 +38,59 @@ namespace BookInfoApp.DAL.Repositories.AreaBook
 
             if (resolveOptions.IsBookPublisher)
             {
-                query = query.Include(x => x.BookPublishers);
-                if (resolveOptions.IsPublisher)
+                if (resolveOptions.IsPublisher && resolveOptions.IsCoverType)
                 {
-                    var includable = (IIncludableQueryable<Book, BookPublisher>)query;
-                    query = includable.ThenInclude(x => x.Publisher);
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Publisher);
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.CoverType);
                 }
-                if (resolveOptions.IsCoverType)
+                else if (resolveOptions.IsPublisher && !resolveOptions.IsCoverType)
                 {
-                    var includable = (IIncludableQueryable<Book, BookPublisher>)query;
-                    query = includable.ThenInclude(x => x.CoverType);
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Publisher);
+                }
+
+                else if (!resolveOptions.IsPublisher && resolveOptions.IsCoverType)
+                {
+                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.CoverType);
+                }
+                else
+                {
+                    query = query.Include(x => x.BookPublishers);
                 }
             }
 
             if (resolveOptions.IsBookAuthor)
             {
-                query = query.Include(x => x.BookAuthors);
                 if (resolveOptions.IsAuthor)
                 {
-                    var includable = (IIncludableQueryable<Book, BookAuthor>)query;
-                    query = includable.ThenInclude(x => x.Author);
+                    query = query.Include(x => x.BookAuthors).ThenInclude(x => x.Author);
+                }
+                else
+                {
+                    query = query.Include(x => x.BookAuthors);
                 }
             }
 
             if (resolveOptions.IsBookGenre)
             {
-                query = query.Include(x => x.BookGenres);
                 if (resolveOptions.IsGenre)
                 {
-                    var includable = (IIncludableQueryable<Book, BookGenre>)query;
-                    query = includable.ThenInclude(x => x.Genre);
+                    query = query.Include(x => x.BookGenres).ThenInclude(x => x.Genre);
+                }
+                else
+                {
+                    query = query.Include(x => x.BookGenres);
                 }
             }
 
             if (resolveOptions.IsInputWork)
             {
-                query = query.Include(x => x.InputWorks);
                 if (resolveOptions.IsBook)
                 {
-                    var includable = (IIncludableQueryable<Book, InputWork>)query;
-                    query = includable.ThenInclude(x => x.Work);
+                    query = query.Include(x => x.InputWorks).ThenInclude(x => x.Work);
+                }
+                else
+                {
+                    query = query.Include(x => x.InputWorks);
                 }
             }
             return query;

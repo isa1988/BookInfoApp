@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
-using BookInfoApp.Core.Contracts;
+using BookInfoApp.Core.Contracts.AreaBook;
 using BookInfoApp.Core.Entities.AreaBook;
 using BookInfoApp.Core.Helper;
 using BookInfoApp.Services.Contracts.AreaBook;
@@ -12,7 +11,7 @@ namespace BookInfoApp.Services.Services.AreaBook
 {
     public class AgeCategoryService : GeneralService<AgeCategory, AgeCategoryDto, Guid>, IAgeCategoryService
     {
-        public AgeCategoryService(IMapper mapper, IRepository<AgeCategory, Guid> repository) : base(mapper, repository)
+        public AgeCategoryService(IMapper mapper, IAgeCategoryRepository repository) : base(mapper, repository)
         {
         }
 
@@ -29,6 +28,29 @@ namespace BookInfoApp.Services.Services.AreaBook
         protected override string CkeckBeforeDelete(AgeCategory entity)
         {
             return string.Empty;
+        }
+
+        public async Task<EntityOperationResult<AgeCategory>> EditAsync(AgeCategoryDto editDto)
+        {
+            string errors = CheckBeforeModification(editDto, false);
+            if (!string.IsNullOrEmpty(errors))
+            {
+                return EntityOperationResult<AgeCategory>.Failure().AddError(errors);
+            }
+
+            try
+            {
+                var value = await repositoryBaseId.GetByIdAsync(editDto.Id);
+                value.AgeBegin = editDto.AgeBegin;
+                value.AgeEnd = editDto.AgeEnd;
+                repositoryBaseId.Update(value);
+                await repositoryBaseId.SaveAsync();
+                return EntityOperationResult<AgeCategory>.Success(value);
+            }
+            catch (Exception ex)
+            {
+                return EntityOperationResult<AgeCategory>.Failure().AddError(ex.Message);
+            }
         }
     }
 }

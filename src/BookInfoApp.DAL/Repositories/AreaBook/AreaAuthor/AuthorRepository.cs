@@ -5,7 +5,6 @@ using BookInfoApp.Core.Entities.AreaBook.AreaAuthor;
 using BookInfoApp.Core.Helper;
 using BookInfoApp.DAL.DataBase;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace BookInfoApp.DAL.Repositories.AreaBook.AreaAuthor
 {
@@ -29,13 +28,18 @@ namespace BookInfoApp.DAL.Repositories.AreaBook.AreaAuthor
                 return query;
             }
 
+            //dbSet = dbSet.If(resolveOptions.IsBookAuthor, q => q.Include(e => e.BookAuthors)
+                //.If(resolveOptions.IsBookAuthor && resolveOptions.IsBook, q2 => q2.ThenInclude(e => e.BookAuthor)));
+
             if (resolveOptions.IsBookAuthor)
             {
-                query = query.Include(x => x.BookAuthors);
                 if (resolveOptions.IsBook)
                 {
-                    var includable = (IIncludableQueryable<Author, BookAuthor>)query;
-                    query = includable.ThenInclude(x => x.Book);
+                    query = query.Include(x => x.BookAuthors).ThenInclude(x => x.Book);
+                }
+                else
+                {
+                    query = query.Include(x => x.BookAuthors);
                 }
             }
 

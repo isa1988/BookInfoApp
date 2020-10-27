@@ -31,11 +31,13 @@ namespace BookInfoApp.DAL.Repositories.AreaBook.AreaGenre
 
             if (resolveOptions.IsBookGenre)
             {
-                query = query.Include(x => x.BookGenras);
                 if (resolveOptions.IsBook)
                 {
-                    var includable = (IIncludableQueryable<Genre, BookGenre>)query;
-                    query = includable.ThenInclude(x => x.Book);
+                    query = query.Include(x => x.BookGenras).ThenInclude(x => x.Book);
+                }
+                else
+                {
+                    query = query.Include(x => x.BookGenras);
                 }
             }
 
