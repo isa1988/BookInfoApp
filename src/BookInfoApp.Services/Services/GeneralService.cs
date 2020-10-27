@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BookInfoApp.Core.Contracts;
 using BookInfoApp.Core.Entities;
+using BookInfoApp.Core.Helper;
 using BookInfoApp.Services.Contracts;
 using BookInfoApp.Services.Dto;
 
@@ -49,6 +50,7 @@ namespace BookInfoApp.Services.Services
             }
         }
 
+        public abstract ResolveOptions GetOptionsForDeteils();
         public async Task<List<TDto>> GetAllAsync()
         {
             var dtoList = await repositoryBase.GetAllAsync();
@@ -57,7 +59,7 @@ namespace BookInfoApp.Services.Services
 
         public async Task<List<TDto>> GetAllDeteilsAsync()
         {
-            var dtoList = await repositoryBase.GetAllAsync();
+            var dtoList = await repositoryBase.GetAllAsync(GetOptionsForDeteils());
             return mapper.Map<List<TDto>>(dtoList);
         }
 
@@ -69,7 +71,7 @@ namespace BookInfoApp.Services.Services
 
         public async Task<List<TDto>> GetPageDeteilsAsync(int numPage, int pageSize)
         {
-            var dtoList = await repositoryBase.GetPageAsync(numPage, pageSize);
+            var dtoList = await repositoryBase.GetPageAsync(numPage, pageSize, GetOptionsForDeteils());
             return mapper.Map<List<TDto>>(dtoList);
         }
     }
@@ -107,7 +109,7 @@ namespace BookInfoApp.Services.Services
         {
             try
             {
-                TEntity entity = await repositoryBaseId.GetByIdAsync(id);
+                TEntity entity = await repositoryBaseId.GetByIdAsync(id, GetOptionsForDeteils());
                 var dto = mapper.Map<TDto>(entity);
                 return EntityOperationResult<TDto>.Success(dto);
             }

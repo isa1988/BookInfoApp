@@ -58,8 +58,8 @@ namespace BookInfoApp.DAL.DataBase.Initializer
                 context.Database.Migrate();
 
                 var coverTypeListChack = coverTypeRepository.GetPageAsync(1, 20).Result;
-                //if (coverTypeListChack?.Count >0)
-                  //  return;
+                if (coverTypeListChack?.Count >0)
+                    return;
                 var authors = AuthorInit();
                 var ageCategories= AgeCategoryInit();
                 var genres=  GenreInit();

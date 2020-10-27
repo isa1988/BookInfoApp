@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using BookInfoApp.Core.Contracts;
 using BookInfoApp.Core.Entities.AreaPublisher;
+using BookInfoApp.Core.Helper;
 using BookInfoApp.Services.Dto.AreaPublisher;
 
 namespace BookInfoApp.Services.Services.AreaPublisher
@@ -12,6 +13,16 @@ namespace BookInfoApp.Services.Services.AreaPublisher
     {
         public PublisherService(IMapper mapper, IRepository<Publisher, Guid> repository) : base(mapper, repository)
         {
+        }
+
+        public override ResolveOptions GetOptionsForDeteils()
+        {
+            return new ResolveOptions
+            {
+                IsBookPublisher = true,
+                IsCoverType = true,
+                IsBook = true,
+            };
         }
 
         protected override string CheckBeforeModification(PublisherDto value, bool isNew = true)

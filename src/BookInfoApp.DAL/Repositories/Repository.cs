@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookInfoApp.Core.Contracts;
 using BookInfoApp.Core.Entities;
+using BookInfoApp.Core.Helper;
 using BookInfoApp.DAL.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -35,16 +36,16 @@ namespace BookInfoApp.DAL.Repositories
             return entry.Entity;
         }
 
-        public virtual async Task<List<T>> GetAllAsync()
+        public virtual async Task<List<T>> GetAllAsync(ResolveOptions resolveOptions = null)
         {
-            var entries = await dbSet.ToListAsync();
+            var entries = await ResolveInclude(resolveOptions).ToListAsync();
             return entries;
         }
 
-        public virtual async Task<List<T>> GetPageAsync(int pageNumber, int rowCount)
+        public virtual async Task<List<T>> GetPageAsync(int pageNumber, int rowCount, ResolveOptions resolveOptions = null)
         {
             int startIndex = (pageNumber - 1) * rowCount;
-            var entries = await dbSet
+            var entries = await ResolveInclude(resolveOptions)
                 .Skip(startIndex)
                 .Take(rowCount)
                 .ToListAsync();
@@ -71,6 +72,7 @@ namespace BookInfoApp.DAL.Repositories
         {
             context.SaveChanges();
         }
+        protected abstract IQueryable<T> ResolveInclude(ResolveOptions resolveOptions);
     }
 
     public abstract class Repository<T, TId> : Repository<T>, IRepository<T, TId>
@@ -84,9 +86,9 @@ namespace BookInfoApp.DAL.Repositories
             this.isIdAutoIncrement = isIdAutoIncrement;
         }
 
-        public virtual async Task<T> GetByIdAsync(TId id)
+        public virtual async Task<T> GetByIdAsync(TId id, ResolveOptions resolveOptions = null)
         {
-            var entry = await dbSet.FirstOrDefaultAsync(x => x.Id.Equals(id));
+            var entry = await ResolveInclude(resolveOptions).FirstOrDefaultAsync(x => x.Id.Equals(id));
             return entry;
         }
 

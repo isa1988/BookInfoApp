@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using BookInfoApp.Core.Contracts;
 using BookInfoApp.Core.Entities.AreaBook.AreaGenre;
+using BookInfoApp.Core.Helper;
 using BookInfoApp.Services.Contracts.AreaBook.AreaGenre;
 using BookInfoApp.Services.Dto.AreaBook.AreaGenre;
 
@@ -18,6 +19,11 @@ namespace BookInfoApp.Services.Services.AreaBook.AreaGenre
         protected override string CheckBeforeModification(GenreDto value, bool isNew = true)
         {
             return string.Empty;
+        }
+
+        public override ResolveOptions GetOptionsForDeteils()
+        {
+            return new ResolveOptions{IsBook = true, IsBookGenre = true};
         }
 
         protected override string CkeckBeforeDelete(Genre entity)
