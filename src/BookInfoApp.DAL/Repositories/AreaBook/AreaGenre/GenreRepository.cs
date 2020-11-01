@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BookInfoApp.Core.Contracts.AreaBook.AreaGenre;
 using BookInfoApp.Core.Entities.AreaBook.AreaGenre;
 using BookInfoApp.Core.Helper;
@@ -21,6 +23,54 @@ namespace BookInfoApp.DAL.Repositories.AreaBook.AreaGenre
             return retVal;
         }
 
+        public override async Task<List<Genre>> GetAllAsync(ResolveOptions resolveOptions = null)
+        {
+            var entities = await base.GetAllAsync(resolveOptions);
+
+            ClearGenre(entities);
+
+            return entities;
+        }
+
+        public override async Task<List<Genre>> GetPageAsync(int pageNumber, int rowCount, ResolveOptions resolveOptions = null)
+        {
+            var entities = await base.GetPageAsync(pageNumber, rowCount, resolveOptions);
+
+            ClearGenre(entities);
+
+            return entities;
+        }
+
+        private void ClearGenre(List<Genre> entities)
+        {
+            foreach (var item in entities)
+            {
+                if (item.BookGenras == null)
+                {
+                    continue;
+                }
+                foreach (var item2 in item.BookGenras)
+                {
+                    item2.Genre = null;
+                }
+            }
+        }
+
+        public override async Task<Genre> GetByIdAsync(Guid id, ResolveOptions resolveOptions = null)
+        {
+            var entity = await base.GetByIdAsync(id, resolveOptions);
+
+            if (entity.BookGenras != null)
+            {
+                foreach (var item2 in entity.BookGenras)
+                {
+                    item2.Genre = null;
+                }
+            }
+
+            return entity;
+        }
+
         protected override IQueryable<Genre> ResolveInclude(ResolveOptions resolveOptions)
         {
             IQueryable<Genre> query = dbSet;
@@ -31,13 +81,10 @@ namespace BookInfoApp.DAL.Repositories.AreaBook.AreaGenre
 
             if (resolveOptions.IsBookGenre)
             {
+                query = query.Include(x => x.BookGenras);
                 if (resolveOptions.IsBook)
                 {
                     query = query.Include(x => x.BookGenras).ThenInclude(x => x.Book);
-                }
-                else
-                {
-                    query = query.Include(x => x.BookGenras);
                 }
             }
 

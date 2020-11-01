@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BookInfoApp.Core.Contracts.AreaBook;
@@ -11,8 +12,10 @@ namespace BookInfoApp.Services.Services.AreaBook
 {
     public class AgeCategoryService : GeneralService<AgeCategory, AgeCategoryDto, Guid>, IAgeCategoryService
     {
+        private readonly IAgeCategoryRepository ageCategoryRepository;
         public AgeCategoryService(IMapper mapper, IAgeCategoryRepository repository) : base(mapper, repository)
         {
+            ageCategoryRepository = repository;
         }
 
         protected override string CheckBeforeModification(AgeCategoryDto value, bool isNew = true)
@@ -28,6 +31,34 @@ namespace BookInfoApp.Services.Services.AreaBook
         protected override string CkeckBeforeDelete(AgeCategory entity)
         {
             return string.Empty;
+        }
+
+        public override async Task<List<AgeCategoryDto>> GetAllDeteilsAsync()
+        {
+            var entities = await ageCategoryRepository.GetAllAsync(GetOptionsForDeteils());
+            var dtos = mapper.Map<List<AgeCategoryDto>>(entities);
+            return dtos;
+        }
+
+        public override async Task<List<AgeCategoryDto>> GetPageAsync(int numPage, int pageSize)
+        {
+            var entities = await ageCategoryRepository.GetPageAsync(numPage, pageSize, GetOptionsForDeteils());
+            var dtos = mapper.Map<List<AgeCategoryDto>>(entities);
+            return dtos;
+        }
+
+        public override async Task<EntityOperationResult<AgeCategoryDto>> GetByIdDeteilsAsync(Guid id)
+        {
+            try
+            {
+                var entity = await ageCategoryRepository.GetByIdAsync(id, GetOptionsForDeteils());
+                var dto = mapper.Map<AgeCategoryDto>(entity);
+                return EntityOperationResult<AgeCategoryDto>.Success(dto);
+            }
+            catch (Exception ex)
+            {
+                return EntityOperationResult<AgeCategoryDto>.Failure().AddError(ex.Message);
+            }
         }
 
         public async Task<EntityOperationResult<AgeCategory>> EditAsync(AgeCategoryDto editDto)

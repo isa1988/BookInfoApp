@@ -88,8 +88,10 @@ namespace BookInfoApp.DAL.Repositories
 
         public virtual async Task<T> GetByIdAsync(TId id, ResolveOptions resolveOptions = null)
         {
-            var entry = await ResolveInclude(resolveOptions).FirstOrDefaultAsync(x => x.Id.Equals(id));
-            return entry;
+            var entity = await ResolveInclude(resolveOptions).FirstOrDefaultAsync(x => x.Id.Equals(id));
+            if (entity == null)
+                throw new NullReferenceException("Не найдено значение по идентификатору");
+            return entity;
         }
 
         protected abstract TId GetNewId();

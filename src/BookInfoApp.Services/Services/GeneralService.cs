@@ -28,7 +28,7 @@ namespace BookInfoApp.Services.Services
         protected readonly IRepository<TEntity> repositoryBase;
 
         protected abstract string CheckBeforeModification(TDto value, bool isNew = true);
-        public async Task<EntityOperationResult<TEntity>> CreateAsync(TDto createDto)
+        public virtual async Task<EntityOperationResult<TEntity>> CreateAsync(TDto createDto)
         {
             string errors = CheckBeforeModification(createDto);
             if (!string.IsNullOrEmpty(errors))
@@ -51,25 +51,25 @@ namespace BookInfoApp.Services.Services
         }
 
         public abstract ResolveOptions GetOptionsForDeteils();
-        public async Task<List<TDto>> GetAllAsync()
+        public virtual async Task<List<TDto>> GetAllAsync()
         {
             var dtoList = await repositoryBase.GetAllAsync();
             return mapper.Map<List<TDto>>(dtoList);
         }
 
-        public async Task<List<TDto>> GetAllDeteilsAsync()
+        public virtual async Task<List<TDto>> GetAllDeteilsAsync()
         {
             var dtoList = await repositoryBase.GetAllAsync(GetOptionsForDeteils());
             return mapper.Map<List<TDto>>(dtoList);
         }
 
-        public async Task<List<TDto>> GetPageAsync(int numPage, int pageSize)
+        public virtual async Task<List<TDto>> GetPageAsync(int numPage, int pageSize)
         {
             var dtoList = await repositoryBase.GetPageAsync(numPage, pageSize);
             return mapper.Map<List<TDto>>(dtoList);
         }
 
-        public async Task<List<TDto>> GetPageDeteilsAsync(int numPage, int pageSize)
+        public virtual async Task<List<TDto>> GetPageDeteilsAsync(int numPage, int pageSize)
         {
             var dtoList = await repositoryBase.GetPageAsync(numPage, pageSize, GetOptionsForDeteils());
             return mapper.Map<List<TDto>>(dtoList);
@@ -91,7 +91,7 @@ namespace BookInfoApp.Services.Services
         
         protected readonly IRepository<TEntity, TId> repositoryBaseId;
 
-        public async Task<EntityOperationResult<TDto>> GetByIdAsync(TId id)
+        public virtual async Task<EntityOperationResult<TDto>> GetByIdAsync(TId id)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace BookInfoApp.Services.Services
             }
         }
 
-        public async Task<EntityOperationResult<TDto>> GetByIdDeteilsAsync(TId id)
+        public virtual async Task<EntityOperationResult<TDto>> GetByIdDeteilsAsync(TId id)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace BookInfoApp.Services.Services
             }
         }
 
-        public async Task<EntityOperationResult<TEntity>> DeleteItemAsync(TId id)
+        public virtual async Task<EntityOperationResult<TEntity>> DeleteItemAsync(TId id)
         {
             try
             {

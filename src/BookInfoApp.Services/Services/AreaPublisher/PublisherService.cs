@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BookInfoApp.Core.Contracts.AreaPublisher;
@@ -11,8 +12,10 @@ namespace BookInfoApp.Services.Services.AreaPublisher
 {
     public class PublisherService : GeneralService<Publisher, PublisherDto, Guid>, IPublisherService
     {
+        private readonly IPublisherRepository publisherRepository;
         public PublisherService(IMapper mapper, IPublisherRepository repository) : base(mapper, repository)
         {
+            publisherRepository = repository;
         }
 
         public override ResolveOptions GetOptionsForDeteils()
@@ -33,6 +36,27 @@ namespace BookInfoApp.Services.Services.AreaPublisher
         protected override string CkeckBeforeDelete(Publisher entity)
         {
             return string.Empty;
+        }
+
+        public override async Task<List<PublisherDto>> GetAllDeteilsAsync()
+        {
+            var entities = await publisherRepository.GetAllAsync(GetOptionsForDeteils());
+            var dtos = mapper.Map<List<PublisherDto>>(entities);
+            return dtos;
+        }
+
+        public override async Task<EntityOperationResult<PublisherDto>> GetByIdDeteilsAsync(Guid id)
+        {
+            try
+            {
+                var entity = await publisherRepository.GetByIdAsync(id, GetOptionsForDeteils());
+                var dto = mapper.Map<PublisherDto>(entity);
+                return EntityOperationResult<PublisherDto>.Success(dto);
+            }
+            catch (Exception ex)
+            {
+                return EntityOperationResult<PublisherDto>.Failure().AddError(ex.Message);
+            }
         }
 
         public async Task<EntityOperationResult<Publisher>> EditAsync(PublisherDto editDto)

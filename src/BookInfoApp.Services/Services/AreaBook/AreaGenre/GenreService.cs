@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BookInfoApp.Core.Contracts.AreaBook.AreaGenre;
@@ -11,8 +12,10 @@ namespace BookInfoApp.Services.Services.AreaBook.AreaGenre
 {
     public class GenreService : GeneralService<Genre, GenreDto, Guid>, IGenreService
     {
+        private readonly IGenreRepository genreRepository;
         public GenreService(IMapper mapper, IGenreRepository repository) : base(mapper, repository)
         {
+            genreRepository = repository;
         }
 
         protected override string CheckBeforeModification(GenreDto value, bool isNew = true)
@@ -28,6 +31,34 @@ namespace BookInfoApp.Services.Services.AreaBook.AreaGenre
         protected override string CkeckBeforeDelete(Genre entity)
         {
             return string.Empty;
+        }
+
+        public override async Task<List<GenreDto>> GetAllDeteilsAsync()
+        {
+            var entities = await genreRepository.GetAllAsync(GetOptionsForDeteils());
+            var dtos = mapper.Map<List<GenreDto>>(entities);
+            return dtos;
+        }
+
+        public override async Task<List<GenreDto>> GetPageAsync(int numPage, int pageSize)
+        {
+            var entities = await genreRepository.GetPageAsync(numPage, pageSize, GetOptionsForDeteils());
+            var dtos = mapper.Map<List<GenreDto>>(entities);
+            return dtos;
+        }
+
+        public override async Task<EntityOperationResult<GenreDto>> GetByIdDeteilsAsync(Guid id)
+        {
+            try
+            {
+                var entity = await genreRepository.GetByIdAsync(id, GetOptionsForDeteils());
+                var dto = mapper.Map<GenreDto>(entity);
+                return EntityOperationResult<GenreDto>.Success(dto);
+            }
+            catch (Exception ex)
+            {
+                return EntityOperationResult<GenreDto>.Failure().AddError(ex.Message);
+            }
         }
 
         public async Task<EntityOperationResult<Genre>> EditAsync(GenreDto editDto)

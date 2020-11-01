@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BookInfoApp.Core.Contracts.AreaPublisher;
 using BookInfoApp.Core.Entities.AreaPublisher;
 using BookInfoApp.Core.Helper;
@@ -20,6 +22,54 @@ namespace BookInfoApp.DAL.Repositories.AreaPublisher
             return retVal;
         }
 
+        public override async Task<List<Publisher>> GetAllAsync(ResolveOptions resolveOptions = null)
+        {
+            var entities = await base.GetAllAsync(resolveOptions);
+
+            ClearPublisher(entities);
+
+            return entities;
+        }
+
+        public override async Task<List<Publisher>> GetPageAsync(int pageNumber, int rowCount, ResolveOptions resolveOptions = null)
+        {
+            var entities = await base.GetPageAsync(pageNumber, rowCount, resolveOptions);
+
+            ClearPublisher(entities);
+
+            return entities;
+        }
+
+        private void ClearPublisher(List<Publisher> entities)
+        {
+            foreach (var item in entities)
+            {
+                if (item.BookPublishers == null)
+                {
+                    continue;
+                }
+                foreach (var item2 in item.BookPublishers)
+                {
+                    item2.Publisher = null;
+                }
+            }
+        }
+
+        public override async Task<Publisher> GetByIdAsync(Guid id, ResolveOptions resolveOptions = null)
+        {
+            var entity = await base.GetByIdAsync(id, resolveOptions);
+
+            if (entity.BookPublishers != null)
+            {
+                foreach (var item2 in entity.BookPublishers)
+                {
+                    item2.Publisher = null;
+                }
+            }
+
+            return entity;
+        }
+
         protected override IQueryable<Publisher> ResolveInclude(ResolveOptions resolveOptions)
         {
             IQueryable<Publisher> query = dbSet;
@@ -30,22 +80,14 @@ namespace BookInfoApp.DAL.Repositories.AreaPublisher
 
             if (resolveOptions.IsBookPublisher)
             {
-                if (resolveOptions.IsCoverType && resolveOptions.IsBook)
-                {
-                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.CoverType);
-                    query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Book);
-                }
-                else if (resolveOptions.IsCoverType && !resolveOptions.IsBook)
+                query = query.Include(x => x.BookPublishers);
+                if (resolveOptions.IsCoverType)
                 {
                     query = query.Include(x => x.BookPublishers).ThenInclude(x => x.CoverType);
                 }
-                else if (!resolveOptions.IsCoverType && resolveOptions.IsBook)
+                if (resolveOptions.IsBook)
                 {
                     query = query.Include(x => x.BookPublishers).ThenInclude(x => x.Book);
-                }
-                else
-                {
-                    query = query.Include(x => x.BookPublishers);
                 }
             }
 
