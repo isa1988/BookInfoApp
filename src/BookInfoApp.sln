@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookInfoApp.WebAPI", "BookInfoApp.WebAPI\BookInfoApp.WebAPI.csproj", "{0C14D88C-CCB2-4EE2-B6D1-5BB3A3B83C45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookInfoApp_WebAPI", "BookInfoApp_WebAPI\BookInfoApp_WebAPI.csproj", "{0C14D88C-CCB2-4EE2-B6D1-5BB3A3B83C45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookInfoApp.Core", "BookInfoApp.Core\BookInfoApp.Core.csproj", "{E0BBF208-ADDF-4727-81B3-7C7B45278F18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookInfoApp_Core", "BookInfoApp_Core\BookInfoApp_Core.csproj", "{E0BBF208-ADDF-4727-81B3-7C7B45278F18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookInfoApp.DAL", "BookInfoApp.DAL\BookInfoApp.DAL.csproj", "{F845AC66-1BF9-4473-8F2B-91E61C8B9F5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookInfoApp_DAL", "BookInfoApp_DAL\BookInfoApp_DAL.csproj", "{F845AC66-1BF9-4473-8F2B-91E61C8B9F5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookInfoApp.Services", "BookInfoApp.Services\BookInfoApp.Services.csproj", "{433E4E72-5223-4709-BB2E-DD7603BEE519}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookInfoApp_Services", "BookInfoApp_Services\BookInfoApp_Services.csproj", "{433E4E72-5223-4709-BB2E-DD7603BEE519}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
